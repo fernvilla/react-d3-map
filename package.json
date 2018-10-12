@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "d3": "^5.7.0",
+    "d3-geo": "^1.11.1",
+    "d3-queue": "^3.0.7",
+    "d3-scale": "^2.1.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.4"
+    "react-scripts": "2.0.4",
+    "topojson": "^3.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
