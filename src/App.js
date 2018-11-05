@@ -105,11 +105,11 @@ class USMap extends React.Component {
       .append("path")
       .attr("fill", d => color(data.get(d.id)))
       .attr("d", path)
-      .attr("class", "county-boundary");
-    // .on("click", d => {
-    //   const selectedCounty = dataJson.filter(data => data.id === d.id);
-    //   console.log(selectedCounty[0]);
-    // });
+      .attr("class", "county-boundary")
+      .on("click", d => {
+        const selectedCounty = dataJson.filter(data => data.id === d.id);
+        console.log(selectedCounty[0]);
+      });
 
     g.append("g")
       .attr("id", "states")
