@@ -1,19 +1,79 @@
 import React from "react";
-// import { queue } from "d3-queue";
-// import { geo } from "d3-geo";
-// import { scale } from "d3-scale";
 import * as d3 from "d3";
 import * as topojson from "topojson";
 import us from "./json/us.json";
+import { data as dataJson } from "./data.js";
 
 import "./App.css";
-
-console.log(us);
 
 class USMap extends React.Component {
   componentDidMount() {
     const { width, height } = this.props;
     let active = d3.select(null);
+    let data = new Map(dataJson.map(d => [d.id, d.rate]));
+
+    var color_domain = [
+      500,
+      1000,
+      1500,
+      2000,
+      2500,
+      3000,
+      3500,
+      4000,
+      4500,
+      5000,
+      5500,
+      6000
+    ];
+    var ext_color_domain = [
+      0,
+      500,
+      1000,
+      1500,
+      2000,
+      2500,
+      3000,
+      3500,
+      4000,
+      4500,
+      5000,
+      5500,
+      6000
+    ];
+    var legend_labels = [
+      "< 500",
+      "500+",
+      "1000+",
+      "1500+",
+      "2000+",
+      "2500+",
+      "3000+",
+      "3500+",
+      "4000+",
+      "4500+",
+      "5000+",
+      "5500+",
+      "6000+"
+    ];
+    var color = d3
+      .scaleThreshold()
+      .domain(color_domain)
+      .range([
+        "#dcdcdc",
+        "#d0d6cd",
+        "#bdc9be",
+        "#aabdaf",
+        "#97b0a0",
+        "#84a491",
+        "#719782",
+        "#5e8b73",
+        "#4b7e64",
+        "#387255",
+        "#256546",
+        "#125937",
+        "#004d28"
+      ]);
 
     const projection = d3
       .geoAlbersUsa()
@@ -43,9 +103,13 @@ class USMap extends React.Component {
       .data(topojson.feature(us, us.objects.counties).features)
       .enter()
       .append("path")
+      .attr("fill", d => color(data.get(d.id)))
       .attr("d", path)
-      .attr("class", "county-boundary")
-      .on("click", d => console.log(d));
+      .attr("class", "county-boundary");
+    // .on("click", d => {
+    //   const selectedCounty = dataJson.filter(data => data.id === d.id);
+    //   console.log(selectedCounty[0]);
+    // });
 
     g.append("g")
       .attr("id", "states")
@@ -91,6 +155,40 @@ class USMap extends React.Component {
         .style("stroke-width", "1.5px")
         .attr("transform", "");
     }
+
+    var legend = svg
+      .selectAll("g.legend")
+      .data(ext_color_domain)
+      .enter()
+      .append("g")
+      .attr("class", "legend");
+
+    var ls_w = 73,
+      ls_h = 10;
+
+    legend
+      .append("rect")
+      .attr("x", (d, i) => width - i * ls_w - ls_w)
+      .attr("y", 570)
+      .attr("width", ls_w)
+      .attr("height", ls_h)
+      .style("fill", (d, i) => color(d))
+      .style("opacity", 0.8);
+
+    legend
+      .append("text")
+      .attr("x", (d, i) => width - i * ls_w - ls_w)
+      .attr("y", 600)
+      .text((d, i) => legend_labels[i]);
+
+    const legend_title = "Number of stuffs";
+
+    svg
+      .append("text")
+      .attr("x", 10)
+      .attr("y", 560)
+      .attr("class", "legend_title")
+      .text(() => legend_title);
   }
 
   render() {

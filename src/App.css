@@ -28,12 +28,12 @@ path:hover {
 }
 
 .county-boundary {
-  fill: #aaa;
+  /* fill: #aaa; */
   stroke: #fff;
   stroke-width: 0.5px;
 }
 
-.county-boundary:hover,
+/* .county-boundary:hover,
 .state:hover {
   fill: #ccc;
-}
+} */
